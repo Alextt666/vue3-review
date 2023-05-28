@@ -5,27 +5,69 @@
   <ModalButton></ModalButton>
   <!-- emits -->
   <Emits @my-click="handleEmits"></Emits>
+  <!-- 全局实例 -->
+  <comp></comp>
+  <!-- v-model使用 -->
+  <VmodalTest v-model:counter="counter"></VmodalTest>
+  <!-- 等价于下面 -->
+  <!-- <VmodalTest :counter="counter" @update:counter=""></VmodalTest> -->
+  <RenderTest v-model:counter="counter">
+    <!-- slot -->
+    <template v-slot> title </template>
+    <template v-slot:content> content... </template>
+  </RenderTest>
 </template>
 
 <script>
-import Composition from './Composition.vue';
-import ModalButton from './ModalButton.vue';
-import Emits from './Emits.vue';
+import Composition from "./Composition.vue";
+import ModalButton from "./ModalButton.vue";
+import Emits from "./Emits.vue";
+import VmodalTest from "./VmodalTest.vue";
+import { h } from "vue";
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
   props: {
     msg: String,
+  },
+  data() {
+    return {
+      counter: 1,
+    };
   },
   components: {
     Composition,
     ModalButton,
-    Emits
+    Emits,
+    VmodalTest,
+    // render Components
+    RenderTest: {
+      props: {
+        counter: {
+          type: Number,
+          default: 0,
+        },
+      },
+      render() {
+        return h("div", [
+          h("div", { onClick: this.onClick }, [
+            "I am RenderTest" + this.counter,
+            this.$slots.default(),
+            this.$slots.content(),
+          ]),
+        ]);
+      },
+      methods: {
+        onClick() {
+          this.$emit("update:counter", this.counter + 1);
+        },
+      },
+    },
   },
-  methods:{
-    handleEmits(){
-      console.log('click');
-    }
-  }
+  methods: {
+    handleEmits() {
+      console.log("click");
+    },
+  },
 };
 </script>
 
