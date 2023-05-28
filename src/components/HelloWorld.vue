@@ -1,11 +1,16 @@
 <template>
-  <!-- <Composition></Composition>
-  <ModalButton></ModalButton> -->
+  <!-- compositionAPI -->
+  <Composition></Composition>
+  <!-- teleport -->
+  <ModalButton></ModalButton>
+  <!-- emits -->
+  <Emits @my-click="handleEmits"></Emits>
 </template>
 
 <script>
 import Composition from './Composition.vue';
 import ModalButton from './ModalButton.vue';
+import Emits from './Emits.vue';
 export default {
   name: 'HelloWorld',
   props: {
@@ -14,7 +19,13 @@ export default {
   components: {
     Composition,
     ModalButton,
+    Emits
   },
+  methods:{
+    handleEmits(){
+      console.log('click');
+    }
+  }
 };
 </script>
 
