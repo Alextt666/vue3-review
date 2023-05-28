@@ -16,6 +16,7 @@
     <template v-slot> title </template>
     <template v-slot:content> content... </template>
   </RenderTest>
+  <Functional level="3">函数式组件</Functional>
 </template>
 
 <script>
@@ -23,6 +24,7 @@ import Composition from "./Composition.vue";
 import ModalButton from "./ModalButton.vue";
 import Emits from "./Emits.vue";
 import VmodalTest from "./VmodalTest.vue";
+import Functional from './Functional.js';
 import { h } from "vue";
 export default {
   name: "HelloWorld",
@@ -62,6 +64,7 @@ export default {
         },
       },
     },
+    Functional
   },
   methods: {
     handleEmits() {
