@@ -17,6 +17,10 @@
     <template v-slot:content> content... </template>
   </RenderTest>
   <Functional level="3">函数式组件</Functional>
+  <!-- 异步组件 -->
+  <AsyncComp></AsyncComp>
+  <!-- 自定义指令 -->
+  <p v-highlight="'green'">highlight this text</p>
 </template>
 
 <script>
@@ -24,8 +28,8 @@ import Composition from "./Composition.vue";
 import ModalButton from "./ModalButton.vue";
 import Emits from "./Emits.vue";
 import VmodalTest from "./VmodalTest.vue";
-import Functional from './Functional.js';
-import { h } from "vue";
+import Functional from "./Functional.js";
+import { defineAsyncComponent, h } from "vue";
 export default {
   name: "HelloWorld",
   props: {
@@ -64,7 +68,8 @@ export default {
         },
       },
     },
-    Functional
+    Functional,
+    AsyncComp: defineAsyncComponent(() => import("./Nextpage.vue")),
   },
   methods: {
     handleEmits() {
