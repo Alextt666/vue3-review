@@ -53,7 +53,8 @@
 </template>
 
 <script>
-import { reactive, toRefs , computed} from "vue";
+import { reactive, toRefs, computed, watchEffect } from "vue";
+// 筛选功能 - 指令集
 const filters = {
   all(todos) {
     return todos;
@@ -65,11 +66,24 @@ const filters = {
     return todos.filter((item) => item.completed);
   },
 };
+// 缓存操作 - 指令集
+const todoStorage = {
+  fetchTodos() {
+    let todos = JSON.parse(localStorage.getItem("vue3-todos") || "[]");
+    todos.forEach((item, index) => {
+      item.id = index + 1;
+    });
+    return todos;
+  },
+  save(todos) {
+    localStorage.setItem("vue3-todos", JSON.stringify(todos));
+  },
+};
 export default {
   setup() {
     const state = reactive({
       newTodo: "",
-      todos: [],
+      todos: todoStorage.fetchTodos(),
       beforeEditCache: "", // 缓存编辑前的内容
       editedTodo: null, // 正在编辑的项,
       visibility: "all",
@@ -99,6 +113,10 @@ export default {
     function doneEdit(todo) {
       state.editedTodo = null;
     }
+    // 缓存数据
+    watchEffect(() => {
+      todoStorage.save(state.todos);
+    });
     return {
       ...toRefs(state),
       addTodo,
@@ -131,12 +149,12 @@ export default {
 .editing .edit {
   display: block;
 }
-.filters > span{
-  padding: 2px 4px ;
+.filters > span {
+  padding: 2px 4px;
   margin-right: 4px;
   border: 1px solid transparent;
 }
-.filters > span.selected{
-  border-color: rgba(117, 47, 32, .7);
+.filters > span.selected {
+  border-color: rgba(117, 47, 32, 0.7);
 }
 </style>
