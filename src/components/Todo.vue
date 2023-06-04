@@ -11,7 +11,7 @@
     />
     <ul>
       <li
-        v-for="todo of todos"
+        v-for="todo of filteredTodos"
         :key="todo.id"
         :class="{ completed: todo.completed, editing: todo === editedTodo }"
       >
@@ -26,25 +26,56 @@
           type="text"
           class="edit"
           v-model="todo.title"
+          v-todo-focus="todo === editedTodo"
           @blur="doneEdit(todo)"
           @keyup.enter="doneEdit(todo)"
           @keyup.escape="cancelEdit(todo)"
         />
       </li>
     </ul>
+    <!-- 过滤 -->
+    <p class="filters">
+      <span
+        @click="visibility = 'all'"
+        :class="{ selected: visibility === 'all' }"
+        >All</span
+      ><span
+        @click="visibility = 'active'"
+        :class="{ selected: visibility === 'active' }"
+        >Actived</span
+      ><span
+        @click="visibility = 'compeleted'"
+        :class="{ selected: visibility === 'compeleted' }"
+        >Compelted</span
+      >
+    </p>
   </div>
 </template>
 
 <script>
-import { reactive, toRefs } from "vue";
-
+import { reactive, toRefs , computed} from "vue";
+const filters = {
+  all(todos) {
+    return todos;
+  },
+  active(todos) {
+    return todos.filter((item) => !item.completed);
+  },
+  compeleted(todos) {
+    return todos.filter((item) => item.completed);
+  },
+};
 export default {
   setup() {
     const state = reactive({
       newTodo: "",
       todos: [],
       beforeEditCache: "", // 缓存编辑前的内容
-      editedTodo: null, // 正在编辑的项
+      editedTodo: null, // 正在编辑的项,
+      visibility: "all",
+      filteredTodos: computed(() => {
+        return filters[state.visibility](state.todos);
+      }),
     });
     const addTodo = () => {
       state.todos.push({
@@ -74,8 +105,15 @@ export default {
       removeTodo,
       editTodo,
       cancelEdit,
-      doneEdit
+      doneEdit,
     };
+  },
+  directives: {
+    "todo-focus": (el, { value }) => {
+      if (value) {
+        el.focus();
+      }
+    },
   },
 };
 </script>
@@ -83,5 +121,22 @@ export default {
 <style scoped>
 .completed label {
   text-decoration: line-through;
+}
+
+.edit,
+.editing .view {
+  display: none;
+}
+.view,
+.editing .edit {
+  display: block;
+}
+.filters > span{
+  padding: 2px 4px ;
+  margin-right: 4px;
+  border: 1px solid transparent;
+}
+.filters > span.selected{
+  border-color: rgba(117, 47, 32, .7);
 }
 </style>
