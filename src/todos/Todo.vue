@@ -1,14 +1,15 @@
 <template>
   <div>
     <!-- 新增todo  -->
-    <input
-      type="text"
-      v-model="newTodo"
+    <EditTodo
+      v-model:todo-title="newTodo"
       @keyup.enter="addTodo"
       autofocus
       placeholder="新增今日代办"
       autocomplete="off"
-    />
+    >
+    </EditTodo>
+
     <ul>
       <li
         v-for="todo of filteredTodos"
@@ -22,15 +23,15 @@
           <button @click="removeTodo(todo)">X</button>
         </div>
         <!-- 编辑代办 -->
-        <input
-          type="text"
+        <EditTodo
           class="edit"
-          v-model="todo.title"
+          v-model:todo-title="todo.title"
           v-todo-focus="todo === editedTodo"
           @blur="doneEdit(todo)"
           @keyup.enter="doneEdit(todo)"
           @keyup.escape="cancelEdit(todo)"
-        />
+        >
+        </EditTodo>
       </li>
     </ul>
     <!-- 过滤 -->

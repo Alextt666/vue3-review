@@ -1,6 +1,6 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
-import Todo from './components/Todo.vue';
+import Todo from './todos/Todo.vue';
 </script>
 
 <template>
